@@ -41,16 +41,16 @@ Shared JWT secret (override in real deployments):
 RIDELINK_JWT_SECRET=RideLinkDemoSecretKeyForJwtSigningMustBeLongEnough123
 ```
 
-Each service owns its own in-memory H2 database. **Do not** share tables across services.
+Account, driver, and ride services each own an in-memory H2 database. The fare-payment service uses MongoDB. **Do not** share databases or collections across services.
 
 | Service | JDBC URL | H2 console |
 |---|---|---|
 | Account | `jdbc:h2:mem:accountdb` | http://localhost:8081/h2-console |
 | Driver | `jdbc:h2:mem:driverdb` | http://localhost:8082/h2-console |
 | Ride | `jdbc:h2:mem:ridedb` | http://localhost:8083/h2-console |
-| Fare | `jdbc:h2:mem:faredb` | http://localhost:8084/h2-console |
+| Fare and payments | `mongodb://localhost:27017/ridelink_fares` | MongoDB Compass at `localhost:27017` |
 
-H2 user: `sa` / blank password.
+H2 user for the other services: `sa` / blank password. When the fare-payment service starts, it creates `ridelink_fares` and its `fares` / `payments` collections if needed. Override the Mongo connection with `MONGODB_URI` if needed.
 
 ## Start-up order
 
@@ -130,6 +130,24 @@ distance = Haversine(km) if coordinates provided, else string-length heuristic (
 fare     = baseFare + distance * perKm
 ```
 
+Fare estimate and final-fare requests accept `pickup` and `destination`; optional latitude/longitude coordinates use the Haversine distance instead of the text-length estimate. Final fare also requires a positive `rideId`.
+
+```http
+POST http://localhost:8084/api/fares/estimate
+Content-Type: application/json
+
+{"pickup":"SLIIT Malabe","destination":"Colombo Fort"}
+```
+
+```http
+POST http://localhost:8084/api/fares/final
+Content-Type: application/json
+
+{"rideId":12,"pickup":"SLIIT Malabe","destination":"Colombo Fort"}
+```
+
+Create a simulated payment with `POST /api/payments` using `rideId`, `amount`, and optional `passengerAccountId`, `paymentMethod` (`CASH`, `CARD`, or `WALLET`), and `simulateFailure`. Read its receipt from `GET /api/payments/ride/{rideId}`. Ride completion events are accepted asynchronously at `POST /api/events/ride-completed` with the payment fields.
+
 ## Tests
 
 ```powershell
@@ -147,6 +165,7 @@ Import:
 
 - `postman/RideLink.postman_collection.json`
 - `postman/RideLink.postman_environment.json`
+- [Fare/payment Postman guide](fare-payment-service/POSTMAN_GUIDE.md) — request bodies and read/write endpoints for MongoDB.
 
 Set tokens from login responses into environment variables `passengerToken` and `driverToken`.
 
