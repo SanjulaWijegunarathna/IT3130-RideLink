@@ -38,15 +38,15 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         try {
             String token = header.substring(7);
             Claims claims = jwtService.parse(token);
-            Long userId = Long.valueOf(claims.getSubject());
+            String userId = claims.getSubject();
             userAccountRepository.findById(userId).ifPresent(user -> {
                 if (user.getStatus() == AccountStatus.ACTIVE
                         && SecurityContextHolder.getContext().getAuthentication() == null) {
                     UserPrincipal principal = new UserPrincipal(
                             user.getId(), user.getEmail(), user.getPasswordHash(),
                             user.getRole().name(), true);
-                    UsernamePasswordAuthenticationToken auth =
-                            new UsernamePasswordAuthenticationToken(principal, null, principal.getAuthorities());
+                    UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(principal, null,
+                            principal.getAuthorities());
                     auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(auth);
                 }

@@ -1,10 +1,12 @@
 package com.ridelink.account.repository;
 
 import com.ridelink.account.model.UserAccount;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
+
 import java.util.Optional;
 
-public interface UserAccountRepository extends JpaRepository<UserAccount, Long> {
+public interface UserAccountRepository extends MongoRepository<UserAccount, String> {
     Optional<UserAccount> findByEmailIgnoreCase(String email);
+
     boolean existsByEmailIgnoreCase(String email);
 }

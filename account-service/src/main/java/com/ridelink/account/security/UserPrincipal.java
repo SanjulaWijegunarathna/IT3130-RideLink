@@ -9,13 +9,13 @@ import java.util.List;
 
 public class UserPrincipal implements UserDetails {
 
-    private final Long id;
+    private final String id;
     private final String email;
     private final String passwordHash;
     private final String role;
     private final boolean active;
 
-    public UserPrincipal(Long id, String email, String passwordHash, String role, boolean active) {
+    public UserPrincipal(String id, String email, String passwordHash, String role, boolean active) {
         this.id = id;
         this.email = email;
         this.passwordHash = passwordHash;
@@ -23,18 +23,46 @@ public class UserPrincipal implements UserDetails {
         this.active = active;
     }
 
-    public Long getId() { return id; }
-    public String getRole() { return role; }
+    public String getId() {
+        return id;
+    }
+
+    public String getRole() {
+        return role;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_" + role));
     }
 
-    @Override public String getPassword() { return passwordHash; }
-    @Override public String getUsername() { return email; }
-    @Override public boolean isAccountNonExpired() { return true; }
-    @Override public boolean isAccountNonLocked() { return active; }
-    @Override public boolean isCredentialsNonExpired() { return true; }
-    @Override public boolean isEnabled() { return active; }
+    @Override
+    public String getPassword() {
+        return passwordHash;
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return active;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return active;
+    }
 }
