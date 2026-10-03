@@ -4,7 +4,7 @@ import com.ridelink.driver.dto.*;
 import com.ridelink.driver.security.UserPrincipal;
 import com.ridelink.driver.service.DriverService;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
+import org.springframework.htp.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
