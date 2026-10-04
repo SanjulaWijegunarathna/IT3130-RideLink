@@ -34,6 +34,14 @@ public class Ride {
     @Column(nullable = false)
     private String destination;
 
+    private Double pickupLat;
+
+    private Double pickupLng;
+
+    private Double destLat;
+
+    private Double destLng;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private RideStatus status;
@@ -98,6 +106,38 @@ public class Ride {
 
     public void setDestination(String destination) {
         this.destination = destination;
+    }
+
+    public Double getPickupLat() {
+        return pickupLat;
+    }
+
+    public void setPickupLat(Double pickupLat) {
+        this.pickupLat = pickupLat;
+    }
+
+    public Double getPickupLng() {
+        return pickupLng;
+    }
+
+    public void setPickupLng(Double pickupLng) {
+        this.pickupLng = pickupLng;
+    }
+
+    public Double getDestLat() {
+        return destLat;
+    }
+
+    public void setDestLat(Double destLat) {
+        this.destLat = destLat;
+    }
+
+    public Double getDestLng() {
+        return destLng;
+    }
+
+    public void setDestLng(Double destLng) {
+        this.destLng = destLng;
     }
 
     public RideStatus getStatus() {

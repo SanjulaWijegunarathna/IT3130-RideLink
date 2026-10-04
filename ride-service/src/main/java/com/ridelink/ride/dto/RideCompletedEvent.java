@@ -10,6 +10,10 @@ public class RideCompletedEvent {
     private Long driverAccountId;
     private String pickup;
     private String destination;
+    private Double pickupLat;
+    private Double pickupLng;
+    private Double destLat;
+    private Double destLng;
     private BigDecimal finalFare;
 
     public RideCompletedEvent() {
@@ -22,6 +26,10 @@ public class RideCompletedEvent {
             Long driverAccountId,
             String pickup,
             String destination,
+            Double pickupLat,
+            Double pickupLng,
+            Double destLat,
+            Double destLng,
             BigDecimal finalFare) {
         this.rideId = rideId;
         this.passengerAccountId = passengerAccountId;
@@ -29,6 +37,10 @@ public class RideCompletedEvent {
         this.driverAccountId = driverAccountId;
         this.pickup = pickup;
         this.destination = destination;
+        this.pickupLat = pickupLat;
+        this.pickupLng = pickupLng;
+        this.destLat = destLat;
+        this.destLng = destLng;
         this.finalFare = finalFare;
     }
 
@@ -78,6 +90,38 @@ public class RideCompletedEvent {
 
     public void setDestination(String destination) {
         this.destination = destination;
+    }
+
+    public Double getPickupLat() {
+        return pickupLat;
+    }
+
+    public void setPickupLat(Double pickupLat) {
+        this.pickupLat = pickupLat;
+    }
+
+    public Double getPickupLng() {
+        return pickupLng;
+    }
+
+    public void setPickupLng(Double pickupLng) {
+        this.pickupLng = pickupLng;
+    }
+
+    public Double getDestLat() {
+        return destLat;
+    }
+
+    public void setDestLat(Double destLat) {
+        this.destLat = destLat;
+    }
+
+    public Double getDestLng() {
+        return destLng;
+    }
+
+    public void setDestLng(Double destLng) {
+        this.destLng = destLng;
     }
 
     public BigDecimal getFinalFare() {

@@ -40,10 +40,16 @@ public class RideService {
     @Transactional
     public RideResponse createRide(CreateRideRequest request, UserPrincipal passenger) {
         requireRole(passenger, "PASSENGER");
+        if (request.hasPartialCoordinates()) {
+            throw new ApiException(
+                    HttpStatus.BAD_REQUEST,
+                    "INCOMPLETE_COORDINATES",
+                    "Provide pickupLat, pickupLng, destLat and destLng together, or omit all of them");
+        }
 
         FareEstimateResponse estimate = null;
         try {
-            estimate = fareServiceClient.estimateFare(request.getPickup(), request.getDestination());
+            estimate = fareServiceClient.estimateFare(request);
         } catch (Exception ignored) {
             // Fare estimate is optional; proceed without it when the fare service is unavailable.
         }
@@ -54,6 +60,10 @@ public class RideService {
         ride.setPassengerAccountId(passenger.getId());
         ride.setPickup(request.getPickup());
         ride.setDestination(request.getDestination());
+        ride.setPickupLat(request.getPickupLat());
+        ride.setPickupLng(request.getPickupLng());
+        ride.setDestLat(request.getDestLat());
+        ride.setDestLng(request.getDestLng());
         ride.setStatus(RideStatus.ASSIGNED);
         ride.setDriverId(assignment.getDriverId());
         ride.setDriverAccountId(assignment.getAccountId());
@@ -118,10 +128,10 @@ public class RideService {
         }
 
         Ride saved = rideRepository.save(ride);
-        fareServiceClient.publishRideCompletedEventAsync(saved);
         if (saved.getDriverId() != null) {
             driverServiceClient.releaseDriver(saved.getDriverId());
         }
+        fareServiceClient.publishRideCompletedEventAsync(saved);
         return RideResponse.from(saved);
     }
 
