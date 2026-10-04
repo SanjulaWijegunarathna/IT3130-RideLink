@@ -1,0 +1,178 @@
+{
+  "info": {
+    "name": "RideLink Account Service",
+    "description": "IT3130 individual assignment — Account Service APIs",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Register Passenger",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "if (pm.response.code === 201) {",
+              "  const j = pm.response.json();",
+              "  pm.environment.set('passengerToken', j.accessToken);",
+              "  pm.environment.set('passengerId', j.user.id);",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"ayesha@ridelink.lk\",\n  \"password\": \"pass123\",\n  \"fullName\": \"Ayesha Perera\",\n  \"phone\": \"0771111111\",\n  \"role\": \"PASSENGER\"\n}"
+        },
+        "url": "{{accountUrl}}/api/auth/register"
+      }
+    },
+    {
+      "name": "Register Driver Account",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "if (pm.response.code === 201) {",
+              "  const j = pm.response.json();",
+              "  pm.environment.set('driverToken', j.accessToken);",
+              "  pm.environment.set('driverAccountId', j.user.id);",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"nimal@ridelink.lk\",\n  \"password\": \"pass123\",\n  \"fullName\": \"Nimal Silva\",\n  \"phone\": \"0772222222\",\n  \"role\": \"DRIVER\"\n}"
+        },
+        "url": "{{accountUrl}}/api/auth/register"
+      }
+    },
+    {
+      "name": "Login Passenger",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "if (pm.response.code === 200) {",
+              "  const j = pm.response.json();",
+              "  pm.environment.set('passengerToken', j.accessToken);",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"ayesha@ridelink.lk\",\n  \"password\": \"pass123\"\n}"
+        },
+        "url": "{{accountUrl}}/api/auth/login"
+      }
+    },
+    {
+      "name": "Login Driver",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "if (pm.response.code === 200) {",
+              "  const j = pm.response.json();",
+              "  pm.environment.set('driverToken', j.accessToken);",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"nimal@ridelink.lk\",\n  \"password\": \"pass123\"\n}"
+        },
+        "url": "{{accountUrl}}/api/auth/login"
+      }
+    },
+    {
+      "name": "Get Current Profile (Me)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{passengerToken}}"
+          }
+        ],
+        "url": "{{accountUrl}}/api/accounts/me"
+      }
+    },
+    {
+      "name": "Get Account By ID",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{passengerToken}}"
+          }
+        ],
+        "url": "{{accountUrl}}/api/accounts/{{passengerId}}"
+      }
+    },
+    {
+      "name": "Update Profile",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{passengerToken}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"fullName\": \"Ayesha Perera Updated\",\n  \"phone\": \"0779999999\"\n}"
+        },
+        "url": "{{accountUrl}}/api/accounts/{{passengerId}}"
+      }
+    }
+  ]
+}

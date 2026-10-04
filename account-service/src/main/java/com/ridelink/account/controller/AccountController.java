@@ -26,13 +26,13 @@ public class AccountController {
 
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN') or #id == principal.id")
-    public UserResponse get(@PathVariable Long id) {
+    public UserResponse get(@PathVariable String id) {
         return accountService.getById(id);
     }
 
     @PatchMapping("/{id}")
     public UserResponse update(
-            @PathVariable Long id,
+            @PathVariable String id,
             @Valid @RequestBody UpdateProfileRequest request,
             @AuthenticationPrincipal UserPrincipal principal) {
         return accountService.updateProfile(id, request, principal);

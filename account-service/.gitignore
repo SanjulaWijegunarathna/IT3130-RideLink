@@ -1,0 +1,15 @@
+**/target/
+**/.idea/
+**/*.iml
+**/.classpath
+**/.project
+**/.settings/
+**/bin/
+.DS_Store
+*.log
+.env
+*.env
+**/application-local.properties
+.vscode/
+*.class
+**/h2/*.db

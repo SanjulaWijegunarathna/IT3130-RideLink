@@ -28,11 +28,15 @@ import static org.mockito.Mockito.lenient;
 @ExtendWith(MockitoExtension.class)
 class AccountServiceTest {
 
-    @Mock UserAccountRepository repository;
-    @Mock PasswordEncoder passwordEncoder;
-    @Mock JwtService jwtService;
+    @Mock
+    UserAccountRepository repository;
+    @Mock
+    PasswordEncoder passwordEncoder;
+    @Mock
+    JwtService jwtService;
 
-    @InjectMocks AccountService accountService;
+    @InjectMocks
+    AccountService accountService;
 
     @BeforeEach
     void stubs() {
@@ -45,7 +49,7 @@ class AccountServiceTest {
         when(repository.existsByEmailIgnoreCase("a@test.com")).thenReturn(false);
         when(repository.save(any(UserAccount.class))).thenAnswer(inv -> {
             UserAccount a = inv.getArgument(0);
-            a.setId(1L);
+            a.setId("1");
             return a;
         });
 
@@ -63,18 +67,16 @@ class AccountServiceTest {
     @Test
     void register_rejectsDuplicateEmail() {
         when(repository.existsByEmailIgnoreCase("a@test.com")).thenReturn(true);
-        ApiException ex = assertThrows(ApiException.class, () ->
-                accountService.register(new RegisterRequest(
-                        "a@test.com", "secret1", "Ayesha", null, Role.PASSENGER)));
+        ApiException ex = assertThrows(ApiException.class, () -> accountService.register(new RegisterRequest(
+                "a@test.com", "secret1", "Ayesha", null, Role.PASSENGER)));
         assertEquals(HttpStatus.CONFLICT, ex.getStatus());
         assertEquals("EMAIL_EXISTS", ex.getError());
     }
 
     @Test
     void register_rejectsAdminSelfRegistration() {
-        ApiException ex = assertThrows(ApiException.class, () ->
-                accountService.register(new RegisterRequest(
-                        "admin@test.com", "secret1", "Admin", null, Role.ADMIN)));
+        ApiException ex = assertThrows(ApiException.class, () -> accountService.register(new RegisterRequest(
+                "admin@test.com", "secret1", "Admin", null, Role.ADMIN)));
         assertEquals("INVALID_ROLE", ex.getError());
         verify(repository, never()).save(any());
     }
@@ -82,7 +84,7 @@ class AccountServiceTest {
     @Test
     void login_rejectsBadPassword() {
         UserAccount account = new UserAccount();
-        account.setId(1L);
+        account.setId("1");
         account.setEmail("a@test.com");
         account.setPasswordHash("hashed");
         account.setFullName("A");
@@ -90,8 +92,8 @@ class AccountServiceTest {
         when(repository.findByEmailIgnoreCase("a@test.com")).thenReturn(Optional.of(account));
         when(passwordEncoder.matches("wrong", "hashed")).thenReturn(false);
 
-        ApiException ex = assertThrows(ApiException.class, () ->
-                accountService.login(new LoginRequest("a@test.com", "wrong")));
+        ApiException ex = assertThrows(ApiException.class,
+                () -> accountService.login(new LoginRequest("a@test.com", "wrong")));
         assertEquals(HttpStatus.UNAUTHORIZED, ex.getStatus());
     }
 }

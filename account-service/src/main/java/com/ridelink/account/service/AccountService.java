@@ -11,7 +11,8 @@ import com.ridelink.account.security.UserPrincipal;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
+import java.time.Instant;
 
 @Service
 public class AccountService {
@@ -26,7 +27,6 @@ public class AccountService {
         this.jwtService = jwtService;
     }
 
-    @Transactional
     public AuthResponse register(RegisterRequest request) {
         if (request.role() == Role.ADMIN) {
             throw new ApiException(HttpStatus.BAD_REQUEST, "INVALID_ROLE",
@@ -61,7 +61,7 @@ public class AccountService {
         return issueToken(account);
     }
 
-    public UserResponse getById(Long id) {
+    public UserResponse getById(String id) {
         return toResponse(find(id));
     }
 
@@ -69,8 +69,7 @@ public class AccountService {
         return toResponse(find(principal.getId()));
     }
 
-    @Transactional
-    public UserResponse updateProfile(Long id, UpdateProfileRequest request, UserPrincipal actor) {
+    public UserResponse updateProfile(String id, UpdateProfileRequest request, UserPrincipal actor) {
         UserAccount account = find(id);
         boolean self = actor.getId().equals(id);
         boolean admin = "ADMIN".equals(actor.getRole());
@@ -89,10 +88,11 @@ public class AccountService {
             }
             account.setStatus(request.status());
         }
+        account.setUpdatedAt(Instant.now());
         return toResponse(repository.save(account));
     }
 
-    private UserAccount find(Long id) {
+    private UserAccount find(String id) {
         return repository.findById(id)
                 .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "USER_NOT_FOUND", "User not found"));
     }
