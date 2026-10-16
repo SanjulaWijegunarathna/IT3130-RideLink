@@ -14,13 +14,13 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-/**
- * Background worker that simulates async payment processing after a ride completes.
- */
+
 @Component
 public class PaymentEventWorker {
 
     private static final Logger log = LoggerFactory.getLogger(PaymentEventWorker.class);
+
+    
 
     private final InMemoryEventQueue eventQueue;
     private final PaymentRepository paymentRepository;
@@ -33,7 +33,7 @@ public class PaymentEventWorker {
         this.paymentRepository = paymentRepository;
         this.fareService = fareService;
     }
-
+   //2 seconds delay - checks for new ride completed events every 2 seconds
     @Scheduled(fixedDelay = 2000)
     public void processRideCompletedEvents() {
         RideCompletedEvent event;
@@ -42,12 +42,15 @@ public class PaymentEventWorker {
         }
     }
 
+    
     private void processEvent(RideCompletedEvent event) {
+        // Step 1: Prevent duplicate processing for the same ride
         if (paymentRepository.existsByRideId(event.getRideId())) {
             log.debug("Payment already exists for ride {}", event.getRideId());
             return;
         }
 
+        // Step 2: Dynamically calculate trip cost based on ride coordinates
         FareEstimateRequest fareRequest = new FareEstimateRequest();
         fareRequest.setPickup(event.getPickup());
         fareRequest.setDestination(event.getDestination());
@@ -58,6 +61,7 @@ public class PaymentEventWorker {
 
         BigDecimal amount = fareService.estimate(fareRequest).getEstimatedFare();
 
+        // Step 3: Construct Payment entity
         Payment payment = new Payment();
         payment.setRideId(event.getRideId());
         payment.setPassengerAccountId(event.getPassengerAccountId());
@@ -66,6 +70,7 @@ public class PaymentEventWorker {
         payment.setStatus(PaymentStatus.SUCCESS);
         payment.setReceiptNumber(generateReceiptNumber());
 
+        // Step 4: Save record to database
         paymentRepository.save(payment);
         log.info("Async payment recorded for ride {} amount {} LKR", event.getRideId(), amount);
     }

@@ -25,6 +25,13 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+/**
+ * PaymentServiceTest component.
+ * PaymentServiceTest contains the business logic used by the fare-payment service.
+ *
+ * This file is part of the RideLink fare-payment service and documents the
+ * responsibility of the code defined in this class or helper.
+ */
 @ExtendWith(MockitoExtension.class)
 class PaymentServiceTest {
 
@@ -45,7 +52,7 @@ class PaymentServiceTest {
         when(paymentRepository.existsByRideId(1L)).thenReturn(false);
         when(paymentRepository.save(any(Payment.class))).thenAnswer(invocation -> {
             Payment payment = invocation.getArgument(0);
-            payment.setId(10L);
+            payment.setId("10");
             return payment;
         });
 
@@ -67,7 +74,7 @@ class PaymentServiceTest {
         when(paymentRepository.existsByRideId(2L)).thenReturn(false);
         when(paymentRepository.save(any(Payment.class))).thenAnswer(invocation -> {
             Payment payment = invocation.getArgument(0);
-            payment.setId(11L);
+            payment.setId("11");
             return payment;
         });
 
@@ -106,7 +113,7 @@ class PaymentServiceTest {
     @Test
     void getByRideIdReturnsPayment() {
         Payment payment = new Payment();
-        payment.setId(5L);
+        payment.setId("5");
         payment.setRideId(4L);
         payment.setPassengerAccountId(66L);
         payment.setAmount(new BigDecimal("150.00"));
@@ -122,3 +129,4 @@ class PaymentServiceTest {
         assertEquals("RCPT-TEST123", response.getReceiptNumber());
     }
 }
+

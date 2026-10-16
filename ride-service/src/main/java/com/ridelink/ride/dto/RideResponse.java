@@ -14,6 +14,10 @@ public class RideResponse {
     private Long driverAccountId;
     private String pickup;
     private String destination;
+    private Double pickupLat;
+    private Double pickupLng;
+    private Double destLat;
+    private Double destLng;
     private RideStatus status;
     private BigDecimal estimatedFare;
     private BigDecimal finalFare;
@@ -28,6 +32,10 @@ public class RideResponse {
         response.driverAccountId = ride.getDriverAccountId();
         response.pickup = ride.getPickup();
         response.destination = ride.getDestination();
+        response.pickupLat = ride.getPickupLat();
+        response.pickupLng = ride.getPickupLng();
+        response.destLat = ride.getDestLat();
+        response.destLng = ride.getDestLng();
         response.status = ride.getStatus();
         response.estimatedFare = ride.getEstimatedFare();
         response.finalFare = ride.getFinalFare();
@@ -58,6 +66,22 @@ public class RideResponse {
 
     public String getDestination() {
         return destination;
+    }
+
+    public Double getPickupLat() {
+        return pickupLat;
+    }
+
+    public Double getPickupLng() {
+        return pickupLng;
+    }
+
+    public Double getDestLat() {
+        return destLat;
+    }
+
+    public Double getDestLng() {
+        return destLng;
     }
 
     public RideStatus getStatus() {

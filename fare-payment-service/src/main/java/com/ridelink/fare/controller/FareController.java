@@ -22,11 +22,15 @@ public class FareController {
         this.fareService = fareService;
     }
 
+    // EstimateFareController
     @PostMapping("/estimate")
+    // Map incoming request body to FareEstimateRequest object (@Valid @RequestBody
+    // FareEstimateRequest request)
     public ResponseEntity<FareEstimateResponse> estimate(@Valid @RequestBody FareEstimateRequest request) {
         return ResponseEntity.ok(fareService.estimate(request));
     }
 
+    // Calculate and return the final fare for a completed ride
     @PostMapping("/final")
     public ResponseEntity<FinalFareResponse> finalFare(@Valid @RequestBody FinalFareRequest request) {
         return ResponseEntity.ok(fareService.calculateFinalFare(request));

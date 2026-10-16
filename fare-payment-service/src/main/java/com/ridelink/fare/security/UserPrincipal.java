@@ -7,6 +7,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * UserPrincipal component.
+ * UserPrincipal handles security and authentication concerns for the fare-payment service.
+ *
+ * This file is part of the RideLink fare-payment service and documents the
+ * responsibility of the code defined in this class or helper.
+ */
 public class UserPrincipal implements UserDetails {
 
     private final Long id;
@@ -64,3 +71,4 @@ public class UserPrincipal implements UserDetails {
         return active;
     }
 }
+

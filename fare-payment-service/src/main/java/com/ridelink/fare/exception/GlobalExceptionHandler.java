@@ -12,6 +12,7 @@ import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -22,15 +23,19 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidation(MethodArgumentNotValidException ex) {
+        // Collect each field error into a key-value map (e.g., "rideId" -> "rideId is required")
         Map<String, String> fields = new HashMap<>();
         for (FieldError error : ex.getBindingResult().getFieldErrors()) {
             fields.put(error.getField(), error.getDefaultMessage());
         }
+        // Create a Map to store data for the JSON response
         Map<String, Object> body = new HashMap<>();
+        // Add the HTTP status code (400) to the response body
         body.put("status", HttpStatus.BAD_REQUEST.value());
         body.put("error", "VALIDATION_FAILED");
         body.put("message", "Request validation failed");
         body.put("fields", fields);
+        // Add the timestamp to the response body
         body.put("timestamp", Instant.now().toString());
         return ResponseEntity.badRequest().body(body);
     }
@@ -54,3 +59,4 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(status).body(body);
     }
 }
+

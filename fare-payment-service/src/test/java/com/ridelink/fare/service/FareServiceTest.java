@@ -10,6 +10,13 @@ import java.math.BigDecimal;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/**
+ * FareServiceTest component.
+ * FareServiceTest contains the business logic used by the fare-payment service.
+ *
+ * This file is part of the RideLink fare-payment service and documents the
+ * responsibility of the code defined in this class or helper.
+ */
 class FareServiceTest {
 
     private FareService fareService;
@@ -67,3 +74,4 @@ class FareServiceTest {
         assertEquals(new BigDecimal("1.00"), distanceKm);
     }
 }
+

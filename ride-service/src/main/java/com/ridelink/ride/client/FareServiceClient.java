@@ -1,5 +1,6 @@
 package com.ridelink.ride.client;
 
+import com.ridelink.ride.dto.CreateRideRequest;
 import com.ridelink.ride.dto.FareEstimateRequest;
 import com.ridelink.ride.dto.FareEstimateResponse;
 import com.ridelink.ride.dto.FareFinalRequest;
@@ -35,8 +36,14 @@ public class FareServiceClient {
         this.restClient = restClientBuilder.baseUrl(baseUrl).build();
     }
 
-    public FareEstimateResponse estimateFare(String pickup, String destination) {
-        FareEstimateRequest request = new FareEstimateRequest(pickup, destination);
+    public FareEstimateResponse estimateFare(CreateRideRequest rideRequest) {
+        FareEstimateRequest request = new FareEstimateRequest(
+                rideRequest.getPickup(),
+                rideRequest.getDestination(),
+                rideRequest.getPickupLat(),
+                rideRequest.getPickupLng(),
+                rideRequest.getDestLat(),
+                rideRequest.getDestLng());
         return restClient.post()
                 .uri("/api/fares/estimate")
                 .headers(this::applyAuthHeader)
@@ -46,7 +53,14 @@ public class FareServiceClient {
     }
 
     public FareFinalResponse calculateFinalFare(Ride ride) {
-        FareFinalRequest request = new FareFinalRequest(ride.getId(), ride.getPickup(), ride.getDestination());
+        FareFinalRequest request = new FareFinalRequest(
+                ride.getId(),
+                ride.getPickup(),
+                ride.getDestination(),
+                ride.getPickupLat(),
+                ride.getPickupLng(),
+                ride.getDestLat(),
+                ride.getDestLng());
         return restClient.post()
                 .uri("/api/fares/final")
                 .headers(this::applyAuthHeader)
@@ -63,6 +77,10 @@ public class FareServiceClient {
                 ride.getDriverAccountId(),
                 ride.getPickup(),
                 ride.getDestination(),
+                ride.getPickupLat(),
+                ride.getPickupLng(),
+                ride.getDestLat(),
+                ride.getDestLng(),
                 ride.getFinalFare());
         // Capture token before the request thread clears AuthTokenHolder.
         String token = AuthTokenHolder.get();

@@ -3,6 +3,7 @@ package com.ridelink.fare.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
+
 public class RideCompletedEvent {
 
     @NotNull(message = "rideId is required")
@@ -96,3 +97,4 @@ public class RideCompletedEvent {
         this.destLng = destLng;
     }
 }
+

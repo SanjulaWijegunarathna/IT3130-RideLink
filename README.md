@@ -41,16 +41,16 @@ Shared JWT secret (override in real deployments):
 RIDELINK_JWT_SECRET=RideLinkDemoSecretKeyForJwtSigningMustBeLongEnough123
 ```
 
-Account, driver, and ride services each own an in-memory H2 database. The fare-payment service uses MongoDB. **Do not** share databases or collections across services.
+Each microservice owns its own isolated MongoDB database. Services communicate with each other exclusively via REST APIs. **Do not** share databases across services.
 
-| Service | JDBC URL | H2 console |
-|---|---|---|
-| Account | `jdbc:h2:mem:accountdb` | http://localhost:8081/h2-console |
-| Driver | `jdbc:h2:mem:driverdb` | http://localhost:8082/h2-console |
-| Ride | `jdbc:h2:mem:ridedb` | http://localhost:8083/h2-console |
-| Fare and payments | `mongodb://localhost:27017/ridelink_fares` | MongoDB Compass at `localhost:27017` |
+| Service | Port | Database Name | MongoDB URI |
+|---|---|---|---|
+| Account Service | 8081 | `ridelink_accounts` | `mongodb://localhost:27017/ridelink_accounts` |
+| Driver Service | 8082 | `ridelink_drivers` | `mongodb://localhost:27017/ridelink_drivers` |
+| Ride Service | 8083 | `ridelink_rides` | `mongodb://localhost:27017/ridelink_rides` |
+| Fare & Payment Service | 8084 | `ridelink_fares` | `mongodb://localhost:27017/ridelink_fares` |
 
-H2 user for the other services: `sa` / blank password. When the fare-payment service starts, it creates `ridelink_fares` and its `fares` / `payments` collections if needed. Override the Mongo connection with `MONGODB_URI` if needed.
+Inspect the databases and collections easily via **MongoDB Compass** connected to `localhost:27017`.
 
 ## Start-up order
 

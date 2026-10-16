@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/events")
+@RequestMapping("/api/events") // API call - This will send data to event
 public class EventController {
 
     private final PaymentService paymentService;
@@ -22,9 +22,13 @@ public class EventController {
         this.paymentService = paymentService;
     }
 
+    // Ride booking service will call this endpoint when a ride is completed
+
     @PostMapping("/ride-completed")
+    // give response the event is received
     public ResponseEntity<Map<String, Object>> rideCompleted(@Valid @RequestBody RideCompletedEvent event) {
-        paymentService.enqueueRideCompleted(event);
+        paymentService.enqueueRideCompleted(event);// create queue to process payment
+
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(Map.of(
                 "status", "ACCEPTED",
                 "message", "Ride completed event queued for async payment processing",

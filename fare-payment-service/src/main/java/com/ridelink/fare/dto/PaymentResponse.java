@@ -7,7 +7,7 @@ import java.time.Instant;
 
 public class PaymentResponse {
 
-    private Long id;
+    private String id;
     private Long rideId;
     private Long passengerAccountId;
     private BigDecimal amount;
@@ -20,7 +20,7 @@ public class PaymentResponse {
     public PaymentResponse() {
     }
 
-    public PaymentResponse(Long id, Long rideId, Long passengerAccountId, BigDecimal amount,
+    public PaymentResponse(String id, Long rideId, Long passengerAccountId, BigDecimal amount,
                            String currency, PaymentStatus status, String receiptNumber,
                            String failureReason, Instant createdAt) {
         this.id = id;
@@ -34,11 +34,11 @@ public class PaymentResponse {
         this.createdAt = createdAt;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

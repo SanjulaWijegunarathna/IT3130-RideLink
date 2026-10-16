@@ -1,56 +1,51 @@
 package com.ridelink.ride.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.PreUpdate;
-import jakarta.persistence.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigDecimal;
 import java.time.Instant;
 
-@Entity
-@Table(name = "rides")
+@Document(collection = "rides")
 public class Ride {
 
+    @Transient
+    public static final String SEQUENCE_NAME = "rides_sequence";
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Indexed
     private Long passengerAccountId;
 
     private Long driverId;
 
+    @Indexed
     private Long driverAccountId;
 
-    @Column(nullable = false)
     private String pickup;
 
-    @Column(nullable = false)
     private String destination;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    private Double pickupLat;
+
+    private Double pickupLng;
+
+    private Double destLat;
+
+    private Double destLng;
+
     private RideStatus status;
 
     private BigDecimal estimatedFare;
 
     private BigDecimal finalFare;
 
-    @Column(nullable = false, updatable = false)
     private Instant createdAt = Instant.now();
 
     private Instant updatedAt = Instant.now();
-
-    @PreUpdate
-    void onUpdate() {
-        updatedAt = Instant.now();
-    }
 
     public Long getId() {
         return id;
@@ -100,6 +95,38 @@ public class Ride {
         this.destination = destination;
     }
 
+    public Double getPickupLat() {
+        return pickupLat;
+    }
+
+    public void setPickupLat(Double pickupLat) {
+        this.pickupLat = pickupLat;
+    }
+
+    public Double getPickupLng() {
+        return pickupLng;
+    }
+
+    public void setPickupLng(Double pickupLng) {
+        this.pickupLng = pickupLng;
+    }
+
+    public Double getDestLat() {
+        return destLat;
+    }
+
+    public void setDestLat(Double destLat) {
+        this.destLat = destLat;
+    }
+
+    public Double getDestLng() {
+        return destLng;
+    }
+
+    public void setDestLng(Double destLng) {
+        this.destLng = destLng;
+    }
+
     public RideStatus getStatus() {
         return status;
     }
@@ -128,7 +155,15 @@ public class Ride {
         return createdAt;
     }
 
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
+    }
+
     public Instant getUpdatedAt() {
         return updatedAt;
+    }
+
+    public void setUpdatedAt(Instant updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

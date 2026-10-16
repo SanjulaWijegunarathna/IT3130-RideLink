@@ -3,6 +3,7 @@ package com.ridelink.fare.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
+
 public class FinalFareRequest {
 
     @NotNull(message = "rideId is required")
@@ -14,10 +15,10 @@ public class FinalFareRequest {
     @NotBlank(message = "destination is required")
     private String destination;
 
-    private Double pickupLat;
-    private Double pickupLng;
-    private Double destLat;
-    private Double destLng;
+    private Double pickupLat; //Latitude of pick-up location
+    private Double pickupLng; //Longitude of pick-up location
+    private Double destLat; //Latitude of destination location
+    private Double destLng; //Longitude of destination location
 
     public FinalFareRequest() {
     }
@@ -78,3 +79,4 @@ public class FinalFareRequest {
         this.destLng = destLng;
     }
 }
+

@@ -5,13 +5,11 @@ import org.springframework.stereotype.Component;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-/**
- * In-memory stand-in for an async message broker (e.g. RabbitMQ/Kafka).
- * Events are enqueued by the API and drained by {@link PaymentEventWorker}.
- */
 @Component
 public class InMemoryEventQueue {
 
+    // Thread-safe FIFO queue storing events in memory without external message
+    // broker
     private final ConcurrentLinkedQueue<RideCompletedEvent> queue = new ConcurrentLinkedQueue<>();
 
     public void enqueue(RideCompletedEvent event) {

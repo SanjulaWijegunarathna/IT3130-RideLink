@@ -1,11 +1,11 @@
 package com.ridelink.ride.repository;
 
 import com.ridelink.ride.model.Ride;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;
 
-public interface RideRepository extends JpaRepository<Ride, Long> {
+public interface RideRepository extends MongoRepository<Ride, Long> {
 
     List<Ride> findByPassengerAccountIdOrderByCreatedAtDesc(Long passengerAccountId);
 

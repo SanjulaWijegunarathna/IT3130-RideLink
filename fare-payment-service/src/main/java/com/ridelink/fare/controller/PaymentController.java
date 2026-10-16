@@ -23,6 +23,7 @@ public class PaymentController {
         this.paymentService = paymentService;
     }
 
+    // create new payment for a ride
     @PostMapping
     public ResponseEntity<PaymentResponse> recordPayment(@Valid @RequestBody PayRequest request) {
         PaymentResponse response = paymentService.recordPayment(request);

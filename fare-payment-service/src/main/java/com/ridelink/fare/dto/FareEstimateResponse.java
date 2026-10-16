@@ -2,6 +2,7 @@ package com.ridelink.fare.dto;
 
 import java.math.BigDecimal;
 
+
 public class FareEstimateResponse {
 
     private BigDecimal distanceKm;
@@ -15,6 +16,7 @@ public class FareEstimateResponse {
     public FareEstimateResponse() {
     }
 
+    //constructor with parameters
     public FareEstimateResponse(BigDecimal distanceKm, BigDecimal baseFare, BigDecimal perKmRate,
                                 BigDecimal estimatedFare, BigDecimal estimatedMinutes,
                                 String currency, String ruleDescription) {
@@ -83,3 +85,4 @@ public class FareEstimateResponse {
         this.ruleDescription = ruleDescription;
     }
 }
+

@@ -14,9 +14,11 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
 
+     
     private final JwtService jwtService;
 
     public JwtAuthFilter(JwtService jwtService) {
@@ -31,12 +33,14 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
+
         try {
             String token = header.substring(7);
             Claims claims = jwtService.parse(token);
             Long userId = Long.valueOf(claims.getSubject());
             String email = claims.get("email", String.class);
             String role = claims.get("role", String.class);
+
             if (email != null && role != null
                     && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserPrincipal principal = new UserPrincipal(userId, email, role, true);
@@ -46,8 +50,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(auth);
             }
         } catch (Exception ignored) {
+            // If token is invalid or expired, clear security context
             SecurityContextHolder.clearContext();
         }
+
+        // Step 4: Continue the filter chain
         filterChain.doFilter(request, response);
     }
 }
+

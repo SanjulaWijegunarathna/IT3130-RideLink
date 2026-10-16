@@ -1,69 +1,44 @@
 package com.ridelink.fare.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigDecimal;
 import java.time.Instant;
 
-@Entity
-@Table(name = "payments")
+@Document(collection = "payments")
 public class Payment {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
-    @Column(nullable = false, unique = true)
+    @Indexed(unique = true)
     private Long rideId;
 
-    @Column(nullable = false)
     private Long passengerAccountId;
 
-    @Column(nullable = false, precision = 12, scale = 2)
     private BigDecimal amount;
 
-    @Column(nullable = false, length = 3)
-    private String currency;
+    private String currency = "LKR";
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
     private PaymentStatus status;
 
-    @Column(nullable = false, unique = true, length = 64)
+    @Indexed(unique = true)
     private String receiptNumber;
 
-    @Column(length = 500)
     private String failureReason;
 
-    @Column(nullable = false)
-    private Instant createdAt;
+    private Instant createdAt = Instant.now();
 
     public Payment() {
     }
 
-    @PrePersist
-    void onCreate() {
-        if (createdAt == null) {
-            createdAt = Instant.now();
-        }
-        if (currency == null) {
-            currency = "LKR";
-        }
-    }
-
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

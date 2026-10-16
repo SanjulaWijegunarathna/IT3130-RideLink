@@ -15,9 +15,19 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.UUID;
 
+/**
+ * PaymentService component.
+ * PaymentService contains the business logic used by the fare-payment service.
+ *
+ * This file is part of the RideLink fare-payment service and documents the
+ * responsibility of the code defined in this class or helper.
+ */
 @Service
 public class PaymentService {
 
+    // =========================================================================
+    // SECTION 1: REPOSITORY & IN-MEMORY QUEUE DEPENDENCIES
+    // =========================================================================
     private final PaymentRepository paymentRepository;
     private final InMemoryEventQueue eventQueue;
 
@@ -26,13 +36,31 @@ public class PaymentService {
         this.eventQueue = eventQueue;
     }
 
+    // =========================================================================
+    // SECTION 2: SYNCHRONOUS PAYMENT PROCESSING (With Database Transaction)
+    // =========================================================================
+
+    /**
+     * Executes synchronous payment processing.
+     * Annotated with @Transactional so that if any unexpected error occurs,
+     * DB operations are automatically rolled back.
+     *
+     * Detailed execution steps:
+     * - Step 1: Idempotency Check - prevent paying twice for the same ride.
+     * - Step 2: Validate amount (cannot be null).
+     * - Step 3: Instantiate Payment entity and assign random receipt number.
+     * - Step 4: Check simulateFailure flag (used for negative scenario testing).
+     * - Step 5: Mark status as SUCCESS and persist record to database.
+     */
     @Transactional
     public PaymentResponse recordPayment(PayRequest request) {
+        // Step 1: Idempotency check (throws 409 CONFLICT if already exists)
         if (paymentRepository.existsByRideId(request.getRideId())) {
             throw new ApiException(HttpStatus.CONFLICT, "PAYMENT_EXISTS",
                     "A payment already exists for ride " + request.getRideId());
         }
 
+        // Step 2: Validate the payment amount
         boolean simulateFailure = Boolean.TRUE.equals(request.getSimulateFailure());
         BigDecimal amount = request.getAmount();
         if (amount == null) {
@@ -59,6 +87,9 @@ public class PaymentService {
         return toResponse(paymentRepository.save(payment));
     }
 
+    /**
+     * Finds payment record by rideId.
+     */
     public PaymentResponse getByRideId(Long rideId) {
         Payment payment = paymentRepository.findByRideId(rideId)
                 .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "PAYMENT_NOT_FOUND",
@@ -66,6 +97,9 @@ public class PaymentService {
         return toResponse(payment);
     }
 
+    /**
+     * Finds payment record by receipt number
+     */
     public PaymentResponse getByReceipt(String receiptNumber) {
         Payment payment = paymentRepository.findByReceiptNumber(receiptNumber)
                 .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "PAYMENT_NOT_FOUND",

@@ -1,41 +1,40 @@
 package com.ridelink.driver.model;
 
-import jakarta.persistence.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.time.Instant;
 
-@Entity
-@Table(name = "driver_profiles")
+@Document(collection = "driver_profiles")
 public class DriverProfile {
 
+    @Transient
+    public static final String SEQUENCE_NAME = "drivers_sequence";
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Indexed(unique = true)
     private Long accountId;
 
-    @Column(nullable = false)
     private String fullName;
 
     private String phone;
 
-    @Column(nullable = false)
     private String vehicleNumber;
 
-    @Column(nullable = false)
     private String vehicleType;
 
-    @Column(nullable = false)
     private String serviceArea;
 
     private Double latitude;
 
     private Double longitude;
 
-    @Column(nullable = false)
     private boolean available = false;
 
-    @Column(nullable = false, updatable = false)
     private Instant createdAt = Instant.now();
 
     public Long getId() { return id; }
@@ -59,4 +58,5 @@ public class DriverProfile {
     public boolean isAvailable() { return available; }
     public void setAvailable(boolean available) { this.available = available; }
     public Instant getCreatedAt() { return createdAt; }
+    public void setCreatedAt(Instant createdAt) { this.createdAt = createdAt; }
 }

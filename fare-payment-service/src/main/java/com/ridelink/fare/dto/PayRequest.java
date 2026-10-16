@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 
+
 public class PayRequest {
 
     @NotNull(message = "rideId is required")
@@ -51,3 +52,4 @@ public class PayRequest {
         this.simulateFailure = simulateFailure;
     }
 }
+

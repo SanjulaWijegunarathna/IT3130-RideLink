@@ -2,6 +2,7 @@ package com.ridelink.fare.dto;
 
 import java.math.BigDecimal;
 
+
 public class FinalFareResponse {
 
     private Long rideId;
@@ -93,3 +94,4 @@ public class FinalFareResponse {
         this.ruleDescription = ruleDescription;
     }
 }
+
